@@ -140,7 +140,8 @@ ValineFactory.prototype._init = function(){
             path = location.pathname,
             pageSize,
             recordIP,
-            clazzName = 'Comment'
+            clazzName = 'Comment',
+            globalAccess
         } = root.config;
         root['config']['path'] = path.replace(/index\.html?$/, '');
         root['config']['clazzName'] = clazzName;
@@ -226,7 +227,8 @@ ValineFactory.prototype._init = function(){
 
         // Counter
         visitor && CounterFactory.add(AV.Object.extend('Counter'),root.config.path);
-
+        // globalAccess 全站访问量统计
+        globalAccess && CounterFactory.globalAccess(AV.Object.extend('Counter'));
 
         let el = root.config.el || null;
         let _el = Utils.findAll(document, el);
@@ -409,6 +411,41 @@ let CounterFactory = {
             }).catch(ex => {
                 console.error(ex)
             })
+        }
+    },
+    globalAccess(Counter) {
+        let lvs = document.getElementById('\/');
+        if (lvs) {
+            let lv = lvs;
+            let url = Utils.attr(lv, 'id');
+            let title = Utils.attr(lv, 'data-flag-title');
+            let xid = encodeURI(url);
+            let o = {
+                el: lv,
+                url: url,
+                xid: xid,
+                title: title
+            }
+
+            let query = new AV.Query(Counter);
+            query.equalTo('url', '/');
+            query.find().then(ret => {
+                if (ret.length > 0) {
+                    let v = ret[0];
+                    v.increment("time");
+                    v.save().then(rt => {
+                        Utils.find(lv, '.leancloud-visitors-count').innerText = rt.get('time')
+                    }).catch(ex => {
+                        console.log(ex)
+                    });
+                } else {
+                    createCounter(Counter, o)
+                }
+            }).catch(ex => {
+                ex.code == 101 && createCounter(Counter, o)
+            })
+
+            CounterFactory.show(Counter, [lvs])
         }
     }
 }
