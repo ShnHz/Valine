@@ -1,3 +1,13 @@
+> 此版本是根据原作者[xCss/Valine](https://github.com/xCss/Valine)版本改的，新增了全站访问量统计功能
+
+```js
+new Valine({
+    appId: 'xxx',
+    appKey: 'xxx',
+    globalAccess: true
+})
+```
+
 > 由于某些原因，`src目录`将从`v1.4.0`后暂停更新.  
   For some reason, the `src directory` will be suspended from updating after `v1.4.0`.
 
