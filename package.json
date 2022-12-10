@@ -1,6 +1,6 @@
 {
   "name": "valine-gnas",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple comment system based on Leancloud.",
   "main": "dist/Valine.min.js",
   "author": "ShnHz",
