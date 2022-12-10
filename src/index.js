@@ -625,7 +625,7 @@ ValineFactory.prototype.bind = function (option) {
         let _val = (_el.value || '');
         _val = Emoji.parse(_val);
         _el.value = _val;
-        let ret = xssFilter(marked(_val));
+        let ret = xssFilter(marked.marked(_val)||marked(_val));
         defaultComment[_v] = ret;
         _vpreview.innerHTML = ret;
         if (_val) autosize(_el);
